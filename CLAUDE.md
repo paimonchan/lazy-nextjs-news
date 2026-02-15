@@ -105,6 +105,13 @@ interface Article {
 
 ## Code Conventions
 
+### Formatting
+- **Indentation**: 4 spaces (configured in ESLint, Prettier, and tsconfig.json)
+- **Semicolons**: Always required
+- **Quotes**: Double quotes for strings
+- **Trailing commas**: ES5 style
+- All files formatted with Prettier (4-space indent)
+
 ### Styling
 - Use Tailwind utility classes
 - Use `cn()` utility for conditional class merging
