@@ -1,0 +1,24 @@
+import { getFeaturedArticle, getLatestArticles } from "@/lib/data";
+import { NewsCard } from "@/components/news-card";
+
+export default function Home() {
+    const featured = getFeaturedArticle();
+    const latest = getLatestArticles(12).filter((a) => a.id !== featured.id);
+
+    return (
+        <div className="container mx-auto px-4 py-8">
+            <section className="mb-10">
+                <h2 className="text-2xl font-bold mb-4">Featured</h2>
+                <NewsCard article={featured} featured />
+            </section>
+            <section>
+                <h2 className="text-2xl font-bold mb-4">Latest News</h2>
+                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                    {latest.map((article) => (
+                        <NewsCard key={article.id} article={article} />
+                    ))}
+                </div>
+            </section>
+        </div>
+    );
+}
