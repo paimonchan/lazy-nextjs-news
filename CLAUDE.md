@@ -12,7 +12,8 @@ NewsWire is a modern news website built with Next.js 15, featuring dark mode sup
 - **UI Components**: shadcn/ui (New York style)
 - **Fonts**: Geist Sans & Geist Mono
 - **Theme Management**: next-themes
-- **Data**: Static mock data (no external API)
+- **Backend**: Strapi Headless CMS
+- **API**: RESTful API calls to Strapi backend
 
 ## Project Structure
 
@@ -39,7 +40,8 @@ src/
 │   ├── news-card.tsx           # Article card component
 │   └── footer.tsx              # Site footer
 └── lib/
-    ├── data.ts                 # Mock news data and helper functions
+    ├── api.ts                  # Strapi API client functions
+    ├── data.ts                 # Mock news data (fallback)
     └── utils.ts                # shadcn utility (cn function)
 ```
 
@@ -136,6 +138,54 @@ interface Article {
 - Configured in `tsconfig.json`
 - Use for all internal imports
 
+## API Integration
+
+### Strapi Configuration
+
+The app connects to a Strapi headless CMS backend via REST API. Configure the Strapi URL in `.env.local`:
+
+```env
+NEXT_PUBLIC_STRAPI_URL=http://localhost:1337
+```
+
+### API Client (src/lib/api.ts)
+
+Provides typed functions for fetching data from Strapi:
+
+- `getArticles(page, pageSize)` - Fetch paginated articles
+- `getArticleById(id)` - Fetch single article
+- `getArticlesByCategory(categoryName, page, pageSize)` - Filter by category
+- `getCategories()` - Fetch all categories
+- `getSources()` - Fetch all sources
+- `getTrendingArticles(limit)` - Fetch latest articles
+- `searchArticles(query, page, pageSize)` - Search articles
+
+### Data Transformation
+
+Articles are fetched from Strapi and converted to the local Article interface:
+
+```typescript
+interface Article {
+    id: string;
+    title: string;
+    description: string;
+    content: string;
+    category: string;
+    image: string;
+    author: string;
+    publishedAt: string;
+}
+```
+
+Strapi response fields are mapped:
+- `documentId` → `id`
+- `title` → `title`
+- `summary` → `description`
+- `content` → `content`
+- `category.name` → `category`
+- `source.name` → `author`
+- `publishedAt` → `publishedAt` (formatted as date string)
+
 ## Helper Functions (src/lib/data.ts)
 
 - `getArticlesByCategory(category: string)` - Filter articles by category
@@ -145,6 +195,26 @@ interface Article {
 
 ## Development
 
+### Setup with Strapi Backend
+
+1. **Start the Strapi backend** (from D:\Projects\Strapi\strapi-news):
+   ```bash
+   npm run develop
+   ```
+   This starts Strapi at http://localhost:1337
+
+2. **Configure environment** (in this project):
+   Create `.env.local`:
+   ```env
+   NEXT_PUBLIC_STRAPI_URL=http://localhost:1337
+   ```
+
+3. **Start Next.js development server**:
+   ```bash
+   npm run dev
+   ```
+   The app will be available at http://localhost:3000
+
 ### Commands
 ```bash
 npm run dev      # Start development server (localhost:3000)
@@ -152,6 +222,14 @@ npm run build    # Production build with static generation
 npm run start    # Start production server
 npm run lint     # Run ESLint
 ```
+
+### How It Works
+
+- The app fetches data from Strapi REST API at build time and at runtime
+- **Build time**: `generateStaticParams()` functions fetch article/category IDs for pre-rendering
+- **Runtime**: Pages use `getArticles()`, `getArticleById()`, etc. to fetch fresh data
+- **Fallback**: If Strapi is unavailable during build, the app uses default categories and empty params
+- **Error handling**: Graceful UI feedback if Strapi is unreachable at runtime
 
 ### Adding New Articles
 1. Add article object to `articles` array in `src/lib/data.ts`
@@ -234,11 +312,24 @@ This project is optimized for static deployment on:
 
 The build output is fully static with no server-side runtime requirements.
 
+## Troubleshooting
+
+### Strapi Connection Issues
+
+**Problem**: Build fails with "ECONNREFUSED" errors
+- **Solution**: Strapi doesn't need to be running at build time. The app gracefully handles unavailable backend and uses default categories for static param generation.
+
+**Problem**: Homepage shows "Strapi Backend Unavailable" message
+- **Solution**: Start the Strapi server at http://localhost:1337 or update `NEXT_PUBLIC_STRAPI_URL` in `.env.local`
+
+**Problem**: Articles not loading on category pages
+- **Solution**: Verify Strapi is running and articles exist in the database. Check browser console for API errors.
+
 ## Future Enhancements
 
 Consider adding:
 - Real images with Next.js Image component
-- Search functionality
+- Search functionality (using `searchArticles()` from API client)
 - Article pagination
 - Related articles section
 - Social media sharing
@@ -248,3 +339,5 @@ Consider adding:
 - Analytics integration
 - Reading time calculation
 - Article bookmarking
+- Caching layer (SWR, React Query)
+- Server-side filtering and sorting
