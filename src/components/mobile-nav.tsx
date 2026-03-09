@@ -13,10 +13,14 @@ import {
     SheetTrigger,
 } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
-import { categories } from "@/domain/category";
+import type { Category } from "@/domain/category";
 import { cn } from "@/lib/utils";
 
-export function MobileNav() {
+interface MobileNavProps {
+    categories: Category[];
+}
+
+export function MobileNav({ categories }: MobileNavProps) {
     const [open, setOpen] = useState(false);
     const pathname = usePathname();
 

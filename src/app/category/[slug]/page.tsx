@@ -1,28 +1,14 @@
 import { notFound } from "next/navigation";
-import { getCategories } from "@/infrastructure/strapi/category-repository";
+import { getNavCategories } from "@/application/get-nav-categories";
 import { getCategoryArticles } from "@/application/get-category-articles";
 import { NewsCard } from "@/components/news-card";
 import { ErrorMessage } from "@/components/error-message";
 
-const FALLBACK_CATEGORY_SLUGS = [
-    "technology",
-    "business",
-    "sports",
-    "entertainment",
-    "health",
-    "science",
-];
-
 export async function generateStaticParams() {
-    try {
-        const categories = await getCategories();
-        return categories.map((c) => ({ slug: c.name.toLowerCase() }));
-    } catch {
-        console.warn(
-            "Could not fetch categories from Strapi, using default categories"
-        );
-        return FALLBACK_CATEGORY_SLUGS.map((slug) => ({ slug }));
-    }
+    const categories = await getNavCategories();
+    return categories
+        .filter((c) => c.slug !== "")
+        .map((c) => ({ slug: c.slug }));
 }
 
 export async function generateMetadata({

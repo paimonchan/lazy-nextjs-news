@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { getNavCategories } from "@/application/get-nav-categories";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -21,11 +22,12 @@ export const metadata: Metadata = {
         "Stay informed with the latest news across technology, business, sports, entertainment, health, and science.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+    const categories = await getNavCategories();
     return (
         <html lang="en" suppressHydrationWarning>
             <body
@@ -37,7 +39,7 @@ export default function RootLayout({
                     enableSystem
                     disableTransitionOnChange
                 >
-                    <Header />
+                    <Header categories={categories} />
                     <main className="flex-1">{children}</main>
                     <Footer />
                 </ThemeProvider>

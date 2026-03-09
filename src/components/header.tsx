@@ -5,11 +5,15 @@ import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import { Sun, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { categories } from "@/domain/category";
+import type { Category } from "@/domain/category";
 import { cn } from "@/lib/utils";
 import { MobileNav } from "@/components/mobile-nav";
 
-export function Header() {
+interface HeaderProps {
+    categories: Category[];
+}
+
+export function Header({ categories }: HeaderProps) {
     const pathname = usePathname();
     const { theme, setTheme } = useTheme();
 
@@ -57,7 +61,7 @@ export function Header() {
                         <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
                         <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
                     </Button>
-                    <MobileNav />
+                    <MobileNav categories={categories} />
                 </div>
             </div>
         </header>

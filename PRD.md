@@ -69,7 +69,7 @@ All Strapi API functions are implemented in `src/lib/api.ts`:
 
 ## 3. Features To Build
 
-### 3.1 Fix: Install Typography Plugin `[TODO]`
+### 3.1 Fix: Install Typography Plugin `[DONE]`
 
 **Priority**: High
 **Why**: Article page uses `prose` classes but `@tailwindcss/typography` is not installed — article body has no styling.
@@ -81,7 +81,7 @@ All Strapi API functions are implemented in `src/lib/api.ts`:
 
 ---
 
-### 3.2 Fix: Extract Shared `convertStrapiToArticle` Utility `[TODO]`
+### 3.2 Fix: Extract Shared `convertStrapiToArticle` Utility `[DONE]`
 
 **Priority**: Medium
 **Why**: Same function is copy-pasted in `page.tsx` and `category/[slug]/page.tsx`.
@@ -93,7 +93,7 @@ All Strapi API functions are implemented in `src/lib/api.ts`:
 
 ---
 
-### 3.3 Dynamic Navigation from Strapi `[TODO]`
+### 3.3 Dynamic Navigation from Strapi `[DONE]`
 
 **Priority**: Medium
 **Why**: Header/MobileNav categories are hardcoded in `data.ts`. New Strapi categories won't appear.
