@@ -1,22 +1,21 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { getArticles, getArticleById } from "@/lib/api";
+import { getArticles } from "@/infrastructure/strapi/article-repository";
+import { getArticleDetail } from "@/application/get-article-detail";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import type { StrapiArticle } from "@/lib/api";
+import { ErrorMessage } from "@/components/error-message";
 
 export async function generateStaticParams() {
     try {
         const { articles } = await getArticles(1, 100);
         return articles.map((a) => ({ id: a.documentId }));
-    } catch (error) {
+    } catch {
         console.warn(
             "Could not fetch articles from Strapi during build, using empty params"
         );
-        // Return empty array when Strapi is unavailable
-        // Individual pages will still render dynamically
         return [];
     }
 }
@@ -28,18 +27,15 @@ export async function generateMetadata({
 }) {
     try {
         const { id } = await params;
-        const article = await getArticleById(id);
+        const article = await getArticleDetail(id);
         return {
             title: article
                 ? `${article.title} - NewsWire`
                 : "Article - NewsWire",
             description: article?.summary,
         };
-    } catch (error) {
-        console.error("Error generating metadata:", error);
-        return {
-            title: "Article - NewsWire",
-        };
+    } catch {
+        return { title: "Article - NewsWire" };
     }
 }
 
@@ -50,15 +46,13 @@ export default async function ArticlePage({
 }) {
     try {
         const { id } = await params;
-        const article = await getArticleById(id);
+        const article = await getArticleDetail(id);
 
-        if (!article) {
-            notFound();
-        }
+        if (!article) notFound();
 
-        const categoryName = article.category?.name?.toLowerCase() || "news";
-        const contentParagraphs =
-            article.content?.split("\n\n") || article.summary.split(". ");
+        const displayCategory =
+            article.categoryName.charAt(0).toUpperCase() +
+            article.categoryName.slice(1);
 
         return (
             <div className="container mx-auto px-4 py-8 max-w-3xl">
@@ -71,21 +65,16 @@ export default async function ArticlePage({
 
                 <article>
                     <div className="flex items-center gap-3 mb-4">
-                        <Link href={`/category/${categoryName}`}>
+                        <Link href={`/category/${article.categorySlug}`}>
                             <Badge
                                 variant="secondary"
                                 className="hover:bg-accent"
                             >
-                                {categoryName.charAt(0).toUpperCase() +
-                                    categoryName.slice(1)}
+                                {displayCategory}
                             </Badge>
                         </Link>
                         <span className="text-sm text-muted-foreground">
-                            {
-                                new Date(article.publishedAt)
-                                    .toISOString()
-                                    .split("T")[0]
-                            }
+                            {article.publishedAt}
                         </span>
                     </div>
 
@@ -98,21 +87,19 @@ export default async function ArticlePage({
                     </p>
 
                     <p className="text-sm text-muted-foreground mb-6">
-                        By {article.source?.name || "Unknown"}
+                        By {article.authorName}
                     </p>
 
                     <div className="bg-muted aspect-[16/9] rounded-lg flex items-center justify-center mb-8">
                         <span className="text-muted-foreground">
-                            {categoryName.charAt(0).toUpperCase() +
-                                categoryName.slice(1)}{" "}
-                            Image
+                            {displayCategory} Image
                         </span>
                     </div>
 
                     <Separator className="mb-8" />
 
                     <div className="prose prose-neutral dark:prose-invert max-w-none">
-                        {contentParagraphs.map((paragraph, i) => (
+                        {article.contentParagraphs.map((paragraph, i) => (
                             <p key={i} className="mb-4 leading-7">
                                 {paragraph.trim()}
                             </p>
@@ -124,11 +111,7 @@ export default async function ArticlePage({
     } catch (error) {
         console.error("Error loading article:", error);
         return (
-            <div className="container mx-auto px-4 py-8">
-                <p className="text-red-500">
-                    Failed to load article. Please try again later.
-                </p>
-            </div>
+            <ErrorMessage message="Failed to load article. Please try again later." />
         );
     }
 }

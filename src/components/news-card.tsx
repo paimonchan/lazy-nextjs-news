@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import type { Article } from "@/lib/data";
+import type { Article } from "@/domain/article";
 
 interface NewsCardProps {
     article: Article;

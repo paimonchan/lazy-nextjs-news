@@ -13,7 +13,7 @@ import {
     SheetTrigger,
 } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
-import { categories } from "@/lib/data";
+import { categories } from "@/domain/category";
 import { cn } from "@/lib/utils";
 
 export function MobileNav() {

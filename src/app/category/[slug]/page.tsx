@@ -1,9 +1,10 @@
 import { notFound } from "next/navigation";
-import { getArticles, getArticlesByCategory } from "@/lib/api";
+import { getCategories } from "@/infrastructure/strapi/category-repository";
+import { getCategoryArticles } from "@/application/get-category-articles";
 import { NewsCard } from "@/components/news-card";
-import type { StrapiArticle } from "@/lib/api";
+import { ErrorMessage } from "@/components/error-message";
 
-const CATEGORY_SLUGS = [
+const FALLBACK_CATEGORY_SLUGS = [
     "technology",
     "business",
     "sports",
@@ -12,42 +13,15 @@ const CATEGORY_SLUGS = [
     "science",
 ];
 
-function convertStrapiToArticle(strapiArticle: StrapiArticle) {
-    return {
-        id: strapiArticle.documentId,
-        title: strapiArticle.title,
-        description: strapiArticle.summary,
-        content: strapiArticle.content || strapiArticle.summary,
-        category: strapiArticle.category?.name?.toLowerCase() || "news",
-        image: "/placeholder.jpg",
-        author: strapiArticle.source?.name || "Unknown",
-        publishedAt: new Date(strapiArticle.publishedAt)
-            .toISOString()
-            .split("T")[0],
-    };
-}
-
 export async function generateStaticParams() {
     try {
-        // Try to fetch categories from Strapi
-        const { articles } = await getArticles(1, 100);
-        const slugs = new Set<string>();
-
-        articles.forEach((article) => {
-            const categoryName = article.category?.name;
-            if (categoryName) {
-                const slug = categoryName.toLowerCase();
-                slugs.add(slug);
-            }
-        });
-
-        return Array.from(slugs).map((slug) => ({ slug }));
-    } catch (error) {
+        const categories = await getCategories();
+        return categories.map((c) => ({ slug: c.name.toLowerCase() }));
+    } catch {
         console.warn(
             "Could not fetch categories from Strapi, using default categories"
         );
-        // Fallback to predefined categories if Strapi is unavailable
-        return CATEGORY_SLUGS.map((slug) => ({ slug }));
+        return FALLBACK_CATEGORY_SLUGS.map((slug) => ({ slug }));
     }
 }
 
@@ -58,10 +32,7 @@ export async function generateMetadata({
 }) {
     const { slug } = await params;
     const categoryName = slug.charAt(0).toUpperCase() + slug.slice(1);
-
-    return {
-        title: `${categoryName} - NewsWire`,
-    };
+    return { title: `${categoryName} - NewsWire` };
 }
 
 export default async function CategoryPage({
@@ -71,13 +42,11 @@ export default async function CategoryPage({
 }) {
     try {
         const { slug } = await params;
+        const result = await getCategoryArticles(slug);
 
-        if (!CATEGORY_SLUGS.includes(slug)) {
-            notFound();
-        }
+        if (!result) notFound();
 
-        const categoryName = slug.charAt(0).toUpperCase() + slug.slice(1);
-        const { articles } = await getArticlesByCategory(categoryName, 1, 25);
+        const { categoryName, articles } = result;
 
         return (
             <div className="container mx-auto px-4 py-8">
@@ -89,10 +58,7 @@ export default async function CategoryPage({
                 ) : (
                     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         {articles.map((article) => (
-                            <NewsCard
-                                key={article.documentId}
-                                article={convertStrapiToArticle(article)}
-                            />
+                            <NewsCard key={article.id} article={article} />
                         ))}
                     </div>
                 )}
@@ -101,11 +67,7 @@ export default async function CategoryPage({
     } catch (error) {
         console.error("Error loading category:", error);
         return (
-            <div className="container mx-auto px-4 py-8">
-                <p className="text-red-500">
-                    Failed to load articles. Please try again later.
-                </p>
-            </div>
+            <ErrorMessage message="Failed to load articles. Please try again later." />
         );
     }
 }

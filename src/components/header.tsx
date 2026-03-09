@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import { Sun, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { categories } from "@/lib/data";
+import { categories } from "@/domain/category";
 import { cn } from "@/lib/utils";
 import { MobileNav } from "@/components/mobile-nav";
 
