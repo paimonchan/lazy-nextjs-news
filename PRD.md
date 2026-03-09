@@ -135,7 +135,7 @@ All Strapi API functions are implemented in `src/lib/api.ts`:
 
 ---
 
-### 3.6 Real Images `[TODO]`
+### 3.6 Real Images `[DONE]`
 
 **Priority**: High
 **Why**: Every card shows a grey placeholder box. No actual images displayed.

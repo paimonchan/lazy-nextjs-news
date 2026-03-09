@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowLeft } from "lucide-react";
 import { getArticles } from "@/infrastructure/strapi/article-repository";
 import { getArticleDetail } from "@/application/get-article-detail";
@@ -90,10 +91,23 @@ export default async function ArticlePage({
                         By {article.authorName}
                     </p>
 
-                    <div className="bg-muted aspect-[16/9] rounded-lg flex items-center justify-center mb-8">
-                        <span className="text-muted-foreground">
-                            {displayCategory} Image
-                        </span>
+                    <div className="relative bg-muted aspect-[16/9] rounded-lg overflow-hidden mb-8">
+                        {article.image ? (
+                            <Image
+                                src={article.image}
+                                alt={article.title}
+                                fill
+                                sizes="(max-width: 768px) 100vw, 768px"
+                                className="object-cover"
+                                priority
+                            />
+                        ) : (
+                            <div className="flex h-full items-center justify-center">
+                                <span className="text-muted-foreground">
+                                    {displayCategory} Image
+                                </span>
+                            </div>
+                        )}
                     </div>
 
                     <Separator className="mb-8" />

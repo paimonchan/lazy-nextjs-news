@@ -8,7 +8,7 @@ export function convertStrapiToArticle(strapiArticle: StrapiArticle): Article {
         description: strapiArticle.summary,
         content: strapiArticle.content || strapiArticle.summary,
         category: strapiArticle.category?.name?.toLowerCase() || "news",
-        image: "/placeholder.jpg",
+        image: strapiArticle.image || "",
         author: strapiArticle.source?.name || "Unknown",
         publishedAt: new Date(strapiArticle.publishedAt)
             .toISOString()

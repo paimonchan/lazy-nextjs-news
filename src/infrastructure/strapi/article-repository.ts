@@ -145,6 +145,7 @@ export async function searchArticles(
     const params = new URLSearchParams({
         "filters[$or][0][title][$containsi]": query,
         "filters[$or][1][summary][$containsi]": query,
+        "filters[$or][2][content][$containsi]": query,
         "pagination[page]": page.toString(),
         "pagination[pageSize]": pageSize.toString(),
         populate: "*",

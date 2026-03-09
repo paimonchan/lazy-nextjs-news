@@ -4,6 +4,7 @@ export interface ArticleDetail {
     id: string;
     title: string;
     summary: string;
+    image: string;
     categoryName: string;
     categorySlug: string;
     authorName: string;
@@ -32,6 +33,7 @@ export async function getArticleDetail(
         id: strapiArticle.documentId,
         title: strapiArticle.title,
         summary: strapiArticle.summary,
+        image: strapiArticle.image || "",
         categoryName,
         categorySlug,
         authorName: strapiArticle.source?.name || "Unknown",
