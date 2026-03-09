@@ -106,7 +106,7 @@ All Strapi API functions are implemented in `src/lib/api.ts`:
 
 ---
 
-### 3.4 Search Feature `[TODO]`
+### 3.4 Search Feature `[DONE]`
 
 **Priority**: Medium
 **Why**: `searchArticles()` API function exists but has no UI.
