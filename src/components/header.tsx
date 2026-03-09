@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
-import { Sun, Moon } from "lucide-react";
+import { Sun, Moon, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Category } from "@/domain/category";
 import { cn } from "@/lib/utils";
@@ -50,6 +50,16 @@ export function Header({ categories }: HeaderProps) {
                     </nav>
                 </div>
                 <div className="flex items-center gap-2">
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        asChild
+                        aria-label="Search articles"
+                    >
+                        <Link href="/search">
+                            <Search className="h-5 w-5" />
+                        </Link>
+                    </Button>
                     <Button
                         variant="ghost"
                         size="icon"
