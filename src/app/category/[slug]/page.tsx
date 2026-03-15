@@ -1,15 +1,9 @@
 import { notFound } from "next/navigation";
-import { getNavCategories } from "@/application/get-nav-categories";
 import { getCategoryArticles } from "@/application/get-category-articles";
 import { NewsCard } from "@/components/news-card";
 import { ErrorMessage } from "@/components/error-message";
 
-export async function generateStaticParams() {
-    const categories = await getNavCategories();
-    return categories
-        .filter((c) => c.slug !== "")
-        .map((c) => ({ slug: c.slug }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
     params,

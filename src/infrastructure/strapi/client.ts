@@ -1,5 +1,4 @@
 function getStrapiUrl(): string {
-    // Using indexed access to prevent build-time inlining
     const env = process.env;
     return (
         env["STRAPI_INTERNAL_URL"] ||
@@ -20,16 +19,8 @@ export function createFetchOptions(): RequestInit {
     if (token) {
         headers["Authorization"] = `Bearer ${token}`;
     }
-    return { headers, cache: "no-store" };
-}
-
-export function createHeaders(): Record<string, string> {
-    const headers: Record<string, string> = {
-        "Content-Type": "application/json",
+    return {
+        headers,
+        next: { revalidate: 60 },
     };
-    const token = process.env["STRAPI_API_TOKEN"];
-    if (token) {
-        headers["Authorization"] = `Bearer ${token}`;
-    }
-    return headers;
 }

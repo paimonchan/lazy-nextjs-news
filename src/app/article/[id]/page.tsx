@@ -2,24 +2,13 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft } from "lucide-react";
-import { getArticles } from "@/infrastructure/strapi/article-repository";
 import { getArticleDetail } from "@/application/get-article-detail";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { ErrorMessage } from "@/components/error-message";
 
-export async function generateStaticParams() {
-    try {
-        const { articles } = await getArticles(1, 100);
-        return articles.map((a) => ({ id: a.documentId }));
-    } catch {
-        console.warn(
-            "Could not fetch articles from Strapi during build, using empty params"
-        );
-        return [];
-    }
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
     params,
