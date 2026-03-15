@@ -2,6 +2,8 @@ import { getHomeArticles } from "@/application/get-home-articles";
 import { NewsCard } from "@/components/news-card";
 import { ErrorMessage } from "@/components/error-message";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
     const result = await getHomeArticles();
 
