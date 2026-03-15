@@ -5,6 +5,8 @@ services:
     ports:
       - "8888:80"
       - "8443:443"
+    environment:
+      DOMAIN: ${DOMAIN:-:80}
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy-data:/data
