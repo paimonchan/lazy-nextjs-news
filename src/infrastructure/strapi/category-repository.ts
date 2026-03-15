@@ -1,4 +1,4 @@
-import { getApiBaseUrl, createHeaders } from "@/infrastructure/strapi/client";
+import { getApiBaseUrl, createFetchOptions } from "@/infrastructure/strapi/client";
 import type {
     StrapiCategory,
     StrapiSource,
@@ -12,9 +12,7 @@ export async function getCategories(): Promise<StrapiCategory[]> {
         "sort[0]": "name:asc",
     });
 
-    const response = await fetch(`${getApiBaseUrl()}/categories?${params}`, {
-        headers: createHeaders(),
-    });
+    const response = await fetch(`${getApiBaseUrl()}/categories?${params}`, createFetchOptions());
 
     if (!response.ok) {
         throw new Error(`Failed to fetch categories: ${response.statusText}`);
@@ -27,9 +25,7 @@ export async function getCategories(): Promise<StrapiCategory[]> {
 export async function getCategoryById(
     documentId: string
 ): Promise<StrapiCategory> {
-    const response = await fetch(`${getApiBaseUrl()}/categories/${documentId}`, {
-        headers: createHeaders(),
-    });
+    const response = await fetch(`${getApiBaseUrl()}/categories/${documentId}`, createFetchOptions());
 
     if (!response.ok) {
         throw new Error(`Failed to fetch category: ${response.statusText}`);
@@ -46,9 +42,7 @@ export async function getSources(): Promise<StrapiSource[]> {
         "sort[0]": "name:asc",
     });
 
-    const response = await fetch(`${getApiBaseUrl()}/sources?${params}`, {
-        headers: createHeaders(),
-    });
+    const response = await fetch(`${getApiBaseUrl()}/sources?${params}`, createFetchOptions());
 
     if (!response.ok) {
         throw new Error(`Failed to fetch sources: ${response.statusText}`);
@@ -59,9 +53,7 @@ export async function getSources(): Promise<StrapiSource[]> {
 }
 
 export async function getSourceById(documentId: string): Promise<StrapiSource> {
-    const response = await fetch(`${getApiBaseUrl()}/sources/${documentId}`, {
-        headers: createHeaders(),
-    });
+    const response = await fetch(`${getApiBaseUrl()}/sources/${documentId}`, createFetchOptions());
 
     if (!response.ok) {
         throw new Error(`Failed to fetch source: ${response.statusText}`);

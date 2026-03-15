@@ -1,4 +1,4 @@
-import { getApiBaseUrl, createHeaders } from "@/infrastructure/strapi/client";
+import { getApiBaseUrl, createFetchOptions } from "@/infrastructure/strapi/client";
 import type {
     StrapiArticle,
     StrapiResponse,
@@ -17,9 +17,7 @@ export async function getArticles(
         "filters[publishedAt][$notNull]": "true",
     });
 
-    const response = await fetch(`${getApiBaseUrl()}/news-articles?${params}`, {
-        headers: createHeaders(),
-    });
+    const response = await fetch(`${getApiBaseUrl()}/news-articles?${params}`, createFetchOptions());
 
     if (!response.ok) {
         throw new Error(`Failed to fetch articles: ${response.statusText}`);
@@ -39,7 +37,7 @@ export async function getArticleById(
 
     const response = await fetch(
         `${getApiBaseUrl()}/news-articles/${documentId}?${params}`,
-        { headers: createHeaders() }
+        createFetchOptions()
     );
 
     if (!response.ok) {
@@ -65,9 +63,7 @@ export async function getArticlesByCategory(
         "filters[publishedAt][$notNull]": "true",
     });
 
-    const response = await fetch(`${getApiBaseUrl()}/news-articles?${params}`, {
-        headers: createHeaders(),
-    });
+    const response = await fetch(`${getApiBaseUrl()}/news-articles?${params}`, createFetchOptions());
 
     if (!response.ok) {
         throw new Error(
@@ -96,9 +92,7 @@ export async function getArticlesBySource(
         "filters[publishedAt][$notNull]": "true",
     });
 
-    const response = await fetch(`${getApiBaseUrl()}/news-articles?${params}`, {
-        headers: createHeaders(),
-    });
+    const response = await fetch(`${getApiBaseUrl()}/news-articles?${params}`, createFetchOptions());
 
     if (!response.ok) {
         throw new Error(
@@ -123,9 +117,7 @@ export async function getTrendingArticles(
         "filters[publishedAt][$notNull]": "true",
     });
 
-    const response = await fetch(`${getApiBaseUrl()}/news-articles?${params}`, {
-        headers: createHeaders(),
-    });
+    const response = await fetch(`${getApiBaseUrl()}/news-articles?${params}`, createFetchOptions());
 
     if (!response.ok) {
         throw new Error(
@@ -153,9 +145,7 @@ export async function searchArticles(
         "filters[publishedAt][$notNull]": "true",
     });
 
-    const response = await fetch(`${getApiBaseUrl()}/news-articles?${params}`, {
-        headers: createHeaders(),
-    });
+    const response = await fetch(`${getApiBaseUrl()}/news-articles?${params}`, createFetchOptions());
 
     if (!response.ok) {
         throw new Error(`Failed to search articles: ${response.statusText}`);
@@ -183,9 +173,7 @@ export async function getArticlesByDateRange(
         "sort[0]": "publishedAt:desc",
     });
 
-    const response = await fetch(`${getApiBaseUrl()}/news-articles?${params}`, {
-        headers: createHeaders(),
-    });
+    const response = await fetch(`${getApiBaseUrl()}/news-articles?${params}`, createFetchOptions());
 
     if (!response.ok) {
         throw new Error(

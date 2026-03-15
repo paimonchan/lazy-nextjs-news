@@ -12,6 +12,17 @@ export function getApiBaseUrl(): string {
     return `${getStrapiUrl()}/api`;
 }
 
+export function createFetchOptions(): RequestInit {
+    const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+    };
+    const token = process.env["STRAPI_API_TOKEN"];
+    if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+    }
+    return { headers, cache: "no-store" };
+}
+
 export function createHeaders(): Record<string, string> {
     const headers: Record<string, string> = {
         "Content-Type": "application/json",

@@ -1,10 +1,8 @@
-import { unstable_noStore as noStore } from "next/cache";
 import { getHomeArticles } from "@/application/get-home-articles";
 import { NewsCard } from "@/components/news-card";
 import { ErrorMessage } from "@/components/error-message";
 
 export default async function Home() {
-    noStore();
     const result = await getHomeArticles();
 
     if (!result) {
