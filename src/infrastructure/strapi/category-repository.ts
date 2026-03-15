@@ -1,4 +1,4 @@
-import { API_BASE_URL, createHeaders } from "@/infrastructure/strapi/client";
+import { getApiBaseUrl, createHeaders } from "@/infrastructure/strapi/client";
 import type {
     StrapiCategory,
     StrapiSource,
@@ -12,7 +12,7 @@ export async function getCategories(): Promise<StrapiCategory[]> {
         "sort[0]": "name:asc",
     });
 
-    const response = await fetch(`${API_BASE_URL}/categories?${params}`, {
+    const response = await fetch(`${getApiBaseUrl()}/categories?${params}`, {
         headers: createHeaders(),
     });
 
@@ -27,7 +27,7 @@ export async function getCategories(): Promise<StrapiCategory[]> {
 export async function getCategoryById(
     documentId: string
 ): Promise<StrapiCategory> {
-    const response = await fetch(`${API_BASE_URL}/categories/${documentId}`, {
+    const response = await fetch(`${getApiBaseUrl()}/categories/${documentId}`, {
         headers: createHeaders(),
     });
 
@@ -46,7 +46,7 @@ export async function getSources(): Promise<StrapiSource[]> {
         "sort[0]": "name:asc",
     });
 
-    const response = await fetch(`${API_BASE_URL}/sources?${params}`, {
+    const response = await fetch(`${getApiBaseUrl()}/sources?${params}`, {
         headers: createHeaders(),
     });
 
@@ -59,7 +59,7 @@ export async function getSources(): Promise<StrapiSource[]> {
 }
 
 export async function getSourceById(documentId: string): Promise<StrapiSource> {
-    const response = await fetch(`${API_BASE_URL}/sources/${documentId}`, {
+    const response = await fetch(`${getApiBaseUrl()}/sources/${documentId}`, {
         headers: createHeaders(),
     });
 

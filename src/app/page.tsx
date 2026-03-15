@@ -10,7 +10,7 @@ export default async function Home() {
             <ErrorMessage
                 variant="warning"
                 title="Strapi Backend Unavailable"
-                message={`The application is configured to use Strapi backend at ${process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337"}. Please start the Strapi backend to load articles.`}
+                message="The Strapi backend is unavailable. Please start the Strapi backend to load articles."
             />
         );
     }
