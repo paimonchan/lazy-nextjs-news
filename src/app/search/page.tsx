@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -20,7 +20,7 @@ async function fetchSearchResults(query: string): Promise<Article[]> {
     return response.json();
 }
 
-export default function SearchPage() {
+function SearchContent() {
     const searchParams = useSearchParams();
     const initialQuery = searchParams.get("q") || "";
 
@@ -115,5 +115,13 @@ export default function SearchPage() {
                 </>
             )}
         </div>
+    );
+}
+
+export default function SearchPage() {
+    return (
+        <Suspense>
+            <SearchContent />
+        </Suspense>
     );
 }
