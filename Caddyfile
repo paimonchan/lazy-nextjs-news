@@ -1,0 +1,9 @@
+{
+	servers {
+		protocols h1 h2
+	}
+}
+
+{$DOMAIN:news.example.com} {
+	reverse_proxy nextjs:3000
+}
