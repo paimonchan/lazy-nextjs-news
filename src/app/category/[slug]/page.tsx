@@ -1,3 +1,4 @@
+import { unstable_noStore as noStore } from "next/cache";
 import { notFound } from "next/navigation";
 import { getNavCategories } from "@/application/get-nav-categories";
 import { getCategoryArticles } from "@/application/get-category-articles";
@@ -27,6 +28,7 @@ export default async function CategoryPage({
     params: Promise<{ slug: string }>;
 }) {
     try {
+        noStore();
         const { slug } = await params;
         const result = await getCategoryArticles(slug);
 

@@ -1,3 +1,4 @@
+import { unstable_noStore as noStore } from "next/cache";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -46,6 +47,7 @@ export default async function ArticlePage({
     params: Promise<{ id: string }>;
 }) {
     try {
+        noStore();
         const { id } = await params;
         const article = await getArticleDetail(id);
 
