@@ -22,7 +22,7 @@ export function Header({ categories }: HeaderProps) {
             <div className="container mx-auto flex h-16 items-center justify-between px-4">
                 <div className="flex items-center gap-6">
                     <Link href="/" className="text-xl font-bold tracking-tight">
-                        NewsWire
+                        PMC News
                     </Link>
                     <nav className="hidden md:flex items-center gap-1">
                         {categories.map((cat) => {

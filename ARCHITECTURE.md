@@ -1,4 +1,4 @@
-# NewsWire - Architecture & Project Documentation
+# PMC News - Architecture & Project Documentation
 
 > Created: 2026-02-22 | Version: 0.1.0
 
@@ -26,7 +26,7 @@
 
 ## Overview
 
-**NewsWire** is a modern news website built with Next.js 15 (App Router). The application fetches article data from a **Strapi Headless CMS** backend via REST API and displays it with a responsive design and dark mode support.
+**PMC News** is a modern news website built with Next.js 15 (App Router). The application fetches article data from a **Strapi Headless CMS** backend via REST API and displays it with a responsive design and dark mode support.
 
 ### Key Features
 
@@ -337,7 +337,7 @@ Content is split into paragraphs as follows:
 - Loads **Geist Sans** and **Geist Mono** fonts from Google Fonts
 - Wraps the app with `ThemeProvider` (next-themes)
 - Includes `<Header />` and `<Footer />` on all pages
-- Global metadata: title "NewsWire - Your Daily News Source"
+- Global metadata: title "PMC News - Your Daily News Source"
 
 #### `src/app/page.tsx` — Homepage
 
@@ -371,7 +371,7 @@ Content is split into paragraphs as follows:
 
 - **Client Component** (`"use client"`)
 - Sticky header with backdrop blur
-- **NewsWire** logo linking to homepage
+- **PMC News** logo linking to homepage
 - Desktop horizontal nav: category links from `domain/category.ts`
 - Active state based on `usePathname()`
 - Dark/light mode toggle (Sun/Moon icons with CSS animation)

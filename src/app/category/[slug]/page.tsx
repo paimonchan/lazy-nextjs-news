@@ -12,7 +12,7 @@ export async function generateMetadata({
 }) {
     const { slug } = await params;
     const categoryName = slug.charAt(0).toUpperCase() + slug.slice(1);
-    return { title: `${categoryName} - NewsWire` };
+    return { title: `${categoryName} - PMC News` };
 }
 
 export default async function CategoryPage({

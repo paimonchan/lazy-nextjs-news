@@ -39,7 +39,7 @@ export function MobileNav({ categories }: MobileNavProps) {
             <SheetContent side="left" className="w-72">
                 <SheetHeader>
                     <SheetTitle className="text-left text-xl font-bold">
-                        NewsWire
+                        PMC News
                     </SheetTitle>
                 </SheetHeader>
                 <Separator className="my-4" />

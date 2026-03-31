@@ -20,12 +20,12 @@ export async function generateMetadata({
         const article = await getArticleDetail(id);
         return {
             title: article
-                ? `${article.title} - NewsWire`
-                : "Article - NewsWire",
+                ? `${article.title} - PMC News`
+                : "Article - PMC News",
             description: article?.summary,
         };
     } catch {
-        return { title: "Article - NewsWire" };
+        return { title: "Article - PMC News" };
     }
 }
 

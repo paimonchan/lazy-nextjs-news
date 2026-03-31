@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-    title: "NewsWire - Your Daily News Source",
+    title: "PMC News - Your Daily News Source",
     description:
         "Stay informed with the latest news across technology, business, sports, entertainment, health, and science.",
 };

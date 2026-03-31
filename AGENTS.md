@@ -1,8 +1,8 @@
-# NewsWire - AI Agent Context
+# PMC News - AI Agent Context
 
 ## Project Overview
 
-NewsWire is a Next.js 15 news website with Strapi CMS backend, featuring dark mode, responsive design, and static site generation.
+PMC News is a Next.js 15 news website with Strapi CMS backend, featuring dark mode, responsive design, and static site generation.
 
 **Full documentation**: See `CLAUDE.md` for comprehensive project details.
 

@@ -1,8 +1,8 @@
-# NewsWire - Next.js News Website
+# PMC News - Next.js News Website
 
 ## Project Overview
 
-NewsWire is a modern news website built with Next.js 15, featuring dark mode support, mobile-responsive design, and static site generation. The site displays news articles across multiple categories with a clean, professional interface.
+PMC News is a modern news website built with Next.js 15, featuring dark mode support, mobile-responsive design, and static site generation. The site displays news articles across multiple categories with a clean, professional interface.
 
 ## Tech Stack
 

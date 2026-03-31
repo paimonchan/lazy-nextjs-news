@@ -1,4 +1,4 @@
-# NewsWire - Product Requirements Document (PRD)
+# PMC News - Product Requirements Document (PRD)
 
 > **How to use this file**: Each feature has a status tag. Change it to tell Claude what to build next.
 >
@@ -13,7 +13,7 @@
 
 ## 1. Project Summary
 
-**NewsWire** is a news aggregator website built with Next.js 15 + TypeScript + Tailwind CSS v4. It pulls articles from a Strapi headless CMS backend and displays them in a clean, responsive, dark-mode-supported interface.
+**PMC News** is a news aggregator website built with Next.js 15 + TypeScript + Tailwind CSS v4. It pulls articles from a Strapi headless CMS backend and displays them in a clean, responsive, dark-mode-supported interface.
 
 **Live Stack**: Next.js 16 (App Router) · React 19 · Tailwind v4 · shadcn/ui · Strapi v5 REST API
 

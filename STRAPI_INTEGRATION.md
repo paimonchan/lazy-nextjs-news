@@ -1,6 +1,6 @@
 # Strapi Integration Guide
 
-This document describes how the NewsWire Next.js frontend integrates with the Strapi backend CMS.
+This document describes how the PMC News Next.js frontend integrates with the Strapi backend CMS.
 
 ## Overview
 
