@@ -17,6 +17,12 @@
 
 **Live Stack**: Next.js 16 (App Router) · React 19 · Tailwind v4 · shadcn/ui · Strapi v5 REST API
 
+**Backend**: `D:\Projects\Strapi\strapi-news` — Strapi v5 with automated news fetcher pipeline (17 RSS sources, 11 categories, ~170 articles/day)
+
+**Backend PRD**: `D:\Projects\Strapi\strapi-news\PRD.md`
+
+**Content Pipeline**: RSS fetch → full-text scrape → `raw_content` → AI summarization → `content` (displayed to users)
+
 ---
 
 ## 2. Current State (What's Already Built)
@@ -26,7 +32,7 @@
 | Page | Route | Description |
 |------|-------|-------------|
 | Home | `/` | Featured article + latest news grid (13 articles from Strapi) |
-| Category | `/category/[slug]` | Filtered articles by category (up to 25) |
+| Category | `/category/[slug]` | Filtered articles by category (up to 25). 11 categories: Technology, Business, Sports, Entertainment, Health, Science, World, Politics, Education, Environment, Finance |
 | Article | `/article/[id]` | Full article detail with back button, metadata, body |
 
 ### 2.2 Core Components `[DONE]`
@@ -124,14 +130,15 @@ All Strapi API functions are implemented in `src/lib/api.ts`:
 
 ### 3.5 Pagination `[TODO]`
 
-**Priority**: Medium
-**Why**: Home shows 13 articles, category shows 25. No way to see more.
+**Priority**: High
+**Why**: Backend now fetches ~170 articles/day from 17 RSS sources across 11 categories. Home shows only 13 articles, category shows 25. Without pagination, 85%+ of content is unreachable. Strapi API has `maxLimit: 100` per page with built-in pagination metadata.
 
 **Requirements**:
 - Add "Load More" button or numbered pagination at bottom of article grids
 - Works on: Home page, Category pages, Search results
 - Use the `page` and `pageSize` params already supported by the API
-- Show total count if available from Strapi response metadata
+- Show total count from Strapi response `meta.pagination` (total, pageCount)
+- Handle Strapi's `maxLimit: 100` — use reasonable `pageSize` (e.g., 25)
 
 ---
 
@@ -283,6 +290,114 @@ All Strapi API functions are implemented in `src/lib/api.ts`:
 
 ---
 
+### 3.19 SEO: Open Graph & Structured Data `[TODO]`
+
+**Priority**: High
+**Why**: Artikel yang di-share di social media tidak punya preview image/description. Google juga belum bisa index artikel dengan baik tanpa structured data.
+
+**Requirements**:
+- Add Open Graph meta tags (og:title, og:description, og:image, og:type) di article page
+- Add Twitter Card meta tags (twitter:card, twitter:title, twitter:image)
+- Add JSON-LD structured data (NewsArticle schema) di article page
+- Dynamic og:image dari article image field
+- Fallback ke default PMC News image kalau artikel tidak punya image
+
+---
+
+### 3.20 Sitemap.xml `[TODO]`
+
+**Priority**: High
+**Why**: Google perlu sitemap untuk discover dan index semua artikel.
+
+**Requirements**:
+- Generate `/sitemap.xml` menggunakan Next.js `sitemap.ts` convention
+- Include semua artikel dan category pages
+- Update otomatis saat ada artikel baru
+- Add sitemap reference di `robots.txt`
+
+---
+
+### 3.21 Homepage Redesign: Breaking News + Category Sections `[TODO]`
+
+**Priority**: Medium
+**Why**: Homepage sekarang hanya grid artikel tanpa struktur. Dengan 11 kategori dan ~170 artikel/hari, homepage perlu struktur yang lebih baik untuk showcase konten dari semua kategori.
+
+**Requirements**:
+- Breaking/Featured news section di atas (1-2 artikel besar)
+- Section per kategori (11 total): Technology, Business, Sports, Entertainment, Health, Science, World, Politics, Education, Environment, Finance — masing-masing 3-4 artikel
+- "See all" link ke category page
+- Responsive: stack di mobile, grid di desktop
+- Consider grouping related categories (e.g., Education + Science, Environment + Health) to avoid overly long page
+
+---
+
+### 3.22 Article Page: Publish Date & Source Badge `[TODO]`
+
+**Priority**: Medium
+**Why**: Artikel sekarang tidak menampilkan tanggal publish dan sumber dengan jelas. Untuk news site, timestamp sangat penting.
+
+**Requirements**:
+- Tampilkan tanggal publish dalam format relative ("2 hours ago") dan absolute ("March 31, 2026")
+- Source badge/chip (misal: "BBC World", "Al Jazeera") yang bisa diklik ke source page
+- Author name di bawah judul
+- Reading time di samping tanggal
+
+---
+
+### 3.23 Dark Mode Image Handling `[TODO]`
+
+**Priority**: Low
+**Why**: Beberapa article image punya background putih yang terlihat jarring di dark mode.
+
+**Requirements**:
+- Add subtle border/rounded corners pada article images
+- Slightly reduce brightness di dark mode (`dark:brightness-90`)
+- Placeholder image yang sesuai dark/light mode
+
+---
+
+### 3.24 Error & Empty States `[TODO]`
+
+**Priority**: Medium
+**Why**: Halaman category kosong atau error hanya menampilkan teks minimal. Perlu UX yang lebih baik.
+
+**Requirements**:
+- Category page tanpa artikel: tampilkan ilustrasi + "No articles in this category yet"
+- Search tanpa hasil: tampilkan suggestions atau trending articles
+- Network error: retry button + informative message
+- 404 page: custom design dengan navigasi kembali
+
+---
+
+### 3.25 Source Page `[TODO]`
+
+**Priority**: Low
+**Why**: Backend has 17 news sources with metadata (name, URL, description). `getSources()` and `getArticlesBySource()` API functions already exist but are unused. Showing articles by source gives users another way to browse content.
+
+**Requirements**:
+- Create `/source/[name]` page showing articles from a specific source
+- Source list page at `/sources` showing all 17 sources with article counts
+- Use existing `getSources()` and `getArticlesBySource()` API functions
+- Each source card: name, description, article count, link to source page
+
+**Backend dependency**: Strapi backend feature 3.5 (Category/Source counts API) would improve this.
+
+---
+
+### 3.26 Content Quality Indicator `[TODO]`
+
+**Priority**: Low
+**Why**: Backend pipeline produces two types of content: AI-summarized (`content`) and raw scraped (`raw_content`). Some articles may only have RSS summary. Showing content quality helps users know what to expect.
+
+**Requirements**:
+- If article has AI-summarized content, show "AI Summary" badge
+- If article only has RSS summary (short), indicate accordingly
+- Optional: show "Read Original" link more prominently for summary-only articles
+
+**Backend dependency**: Relies on `content` field being populated by backend auto-summarization (Backend PRD 3.20).
+
+---
+
 ## 4. Non-Functional Requirements
 
 ### 4.1 Performance `[DONE]`
@@ -310,28 +425,64 @@ All Strapi API functions are implemented in `src/lib/api.ts`:
 
 ## 5. Priority Order (Suggested Build Sequence)
 
-| Order | Feature | Priority |
-|-------|---------|----------|
-| 1 | 3.1 Typography Plugin | High |
-| 2 | 3.6 Real Images | High |
-| 3 | 3.2 Extract Shared Utility | Medium |
-| 4 | 3.12 Loading Skeletons | Medium |
-| 5 | 3.3 Dynamic Navigation | Medium |
-| 6 | 3.4 Search Feature | Medium |
-| 7 | 3.5 Pagination | Medium |
-| 8 | 3.13 Clean Up Dead Code | Low |
-| 9 | 3.9 Related Articles | Low |
-| 10 | 3.10 Reading Time | Low |
-| 11 | 3.7 Read Original Link | Low |
-| 12 | 3.8 Source Link | Low |
-| 13 | 3.11 Trending Section | Low |
-| 14 | 3.18 Social Sharing | Low |
-| 15 | 3.16 RSS Feed | Low |
-| 16 | 4.3 Accessibility | Ongoing |
+### Already Done
+| Feature | Status |
+|---------|--------|
+| 3.1 Typography Plugin | DONE |
+| 3.2 Extract Shared Utility | DONE |
+| 3.3 Dynamic Navigation | DONE |
+| 3.4 Search Feature | DONE |
+| 3.6 Real Images | DONE |
+
+### Next Up
+| Order | Feature | Priority | Notes |
+|-------|---------|----------|-------|
+| 1 | 3.19 SEO: Open Graph & Structured Data | High | |
+| 2 | 3.20 Sitemap.xml | High | |
+| 3 | 3.5 Pagination | High | ~170 articles/day, most content unreachable without this |
+| 4 | 3.22 Article Page: Date & Source Badge | Medium | |
+| 5 | 3.12 Loading Skeletons | Medium | |
+| 6 | 3.21 Homepage Redesign | Medium | Now 11 categories to showcase |
+| 7 | 3.7 Read Original Link | Medium | |
+| 8 | 3.24 Error & Empty States | Medium | |
+| 9 | 3.9 Related Articles | Low | |
+| 10 | 3.10 Reading Time | Low | |
+| 11 | 3.8 Source Link | Low | |
+| 12 | 3.11 Trending Section | Low | |
+| 13 | 3.25 Source Page | Low | Backend has 17 sources with metadata |
+| 14 | 3.18 Social Sharing | Low | |
+| 15 | 3.16 RSS Feed | Low | |
+| 16 | 3.26 Content Quality Indicator | Low | Depends on backend auto-summarization |
+| 17 | 3.13 Clean Up Dead Code | Low | |
+| 18 | 3.23 Dark Mode Image Handling | Low | |
+| 19 | 4.3 Accessibility | Ongoing | |
 
 ---
 
-## 6. Quick Reference: How to Ask Claude to Build
+## 6. Backend Dependencies (Strapi PRD Cross-Reference)
+
+| Frontend Feature | Backend Feature Needed | Backend Status |
+|-----------------|----------------------|----------------|
+| 3.5 Pagination | Strapi pagination API (`meta.pagination`) | DONE (built-in) |
+| 3.21 Homepage Redesign | 11 categories available via API | DONE |
+| 3.22 Date & Source Badge | Source relation in API | DONE |
+| 3.25 Source Page | Backend 3.5 Category/Source counts API | TODO |
+| 3.26 Content Quality | Backend 3.20 Auto-Summarization | TODO |
+| 3.7 Read Original Link | `url` field in articles | DONE |
+| 3.9 Related Articles | Category-filtered API | DONE |
+
+### Backend Features That Improve Frontend (No Blocking)
+| Backend Feature | Impact on Frontend |
+|----------------|-------------------|
+| Backend 3.19 Automated Scheduling | Fresh content daily without manual intervention |
+| Backend 3.20 Auto-Summarization | Better `content` field quality (AI summaries vs RSS snippets) |
+| Backend 3.21 Category `slug` field | More robust dynamic navigation (currently derives slug from name) |
+| Backend 3.22 Image Scraping | Real article images instead of placeholders |
+| Backend 3.23 Deduplication | Fewer duplicate articles across sources |
+
+---
+
+## 7. Quick Reference: How to Ask Claude to Build
 
 ```
 "Build feature 3.1"           → Install typography plugin

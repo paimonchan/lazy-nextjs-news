@@ -6,13 +6,11 @@ const nextConfig: NextConfig = {
         remotePatterns: [
             {
                 protocol: "http",
-                hostname: "localhost",
-                port: "1337",
-                pathname: "/uploads/**",
+                hostname: "**",
             },
             {
                 protocol: "https",
-                hostname: "picsum.photos",
+                hostname: "**",
             },
         ],
     },

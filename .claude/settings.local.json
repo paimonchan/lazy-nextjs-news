@@ -7,7 +7,16 @@
       "Bash(npm run build:*)",
       "Bash(timeout 10 npm run dev:*)",
       "Bash(npx prettier:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(npx tsc:*)",
+      "Bash(curl:*)",
+      "Read(//d/Projects/Strapi/strapi-news/types/**)",
+      "Bash(cd:*)",
+      "Bash(docker info:*)",
+      "Bash(taskkill /F /IM \"Docker Desktop.exe\")",
+      "Bash(Start-Sleep -Seconds 3)",
+      "Bash(taskkill:*)",
+      "Bash(wsl:*)"
     ]
   }
 }
